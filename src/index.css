@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* variables */
+:root {
+  --fontColor: #f3f3f3;
+  --secondaryFontColor: #666;
+  --bgColor: #333;
+  --lightBgColor: #555;
+  --darkBgColor: hsl(225, 6%, 13%);
+  --secondDarkBgColor: #777;
+  --yellow: #FFCB6B;
+  --red: #FF5370;
+}
+
+html {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bgColor);
+  font-family: Poppins, sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.CodeMirror {
+  height: 100% !important;
+  font-family: Poppins, sans-serif;
+  font-size: 16.5px;
+}
+
+.btn {
+  background: var(--yellow);
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: var(--lightBgColor);
+  cursor: pointer;
+  font-size: 1em;
+  border: 1px solid var(--yellow);
+}
+
+.btn:hover {
+  color: var(--yellow);
+  background-color: var(--lightBgColor);
+}
+
+.grow {
+  transition: all .2s ease-in-out;
+}
+
+.grow:hover {
+  transform: scale(1.1);
+}
+
+.error {
+  color: red;
+  background: pink;
+  border: 1px solid red;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+.success {
+  color: var(--bgColor);
+  background: var(--green);
+  border: 1px solid var(--bgColor);
+  border-radius: 4px;
+  padding: 8px;
+  margin: 10px 0;
+}

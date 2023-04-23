@@ -1,0 +1,83 @@
+.instructions-container {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    width: 100%;
+    height: 100%;
+}
+
+.button-group {
+    display: flex;
+    grid-column-start: 1;
+    grid-column-end: -1;
+}
+
+.inst-tab {
+    width: 100%;
+    background-color: var(--darkBgColor);
+    text-align: center;
+    color: var(--fontColor);
+    font-family: Poppins, sans-serif;
+    border: none;
+    padding: 10px 0;
+    border-bottom: 2px solid var(--lightBgColor);
+}
+
+.inst-tab:hover {
+    color: var(--yellow);
+    border-bottom: 2px solid var(--red);
+    cursor: pointer;
+}
+
+.left-tab {
+    border-top-left-radius: 5px;
+}
+
+.right-tab {
+    border-top-right-radius: 5px;
+}
+
+.inst-table-container {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    grid-row-start: 2;
+    height: 395.5px;
+    overflow-y: scroll;
+}
+
+
+.inst-table {
+    width: 100%;
+    padding: 0px 5px 5px 5px;
+    background-color: var(--darkBgColor);
+}
+
+.inst-table thead th {
+    color: var(--secondDarkBgColor);
+    top: 0;
+    position: sticky;
+    background-color: var(--darkBgColor);
+    padding: 10px 10px 10px 0;
+    text-align: left;
+}
+
+
+.inst-table tbody td {
+    color: var(--fontColor);
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+
+.inst-table tbody tr:hover td,
+tr.chosen td {
+    color: #fff;
+}
+
+tr.chosen>td.tal,
+tr.chosen>td.tal:hover {
+    color: var(--yellow);
+}
+
+tr>td.program-counter-address {
+    color: var(--secondDarkBgColor);
+}

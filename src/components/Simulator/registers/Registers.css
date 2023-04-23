@@ -1,0 +1,45 @@
+.stor-table-container {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    background-color: var(--darkBgColor);
+    color: var(--fontColor);
+    height: 395.5px;
+    overflow-y: scroll;
+}
+
+.reg-table-container {
+    height: 416.83px;
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+
+.reg-table {
+    width: 100%;
+    padding: 0px 5px 5px 5px;
+    background-color: var(--darkBgColor);
+    height: 395.5px;
+}
+
+.reg-table thead th {
+    color: var(--secondDarkBgColor);
+    top: 0;
+    position: sticky;
+    background-color: var(--darkBgColor);
+    padding: 10px 10px 10px 0;
+    text-align: left;
+}
+
+.reg-table tbody tr td.reg {
+    color: #777
+}
+
+.reg-table tbody td {
+    color: var(--fontColor);
+    padding-bottom: 1.25px;
+    padding-top: 1.25px;
+}
+
+tr.current-reg>td.reg-val {
+    color: var(--yellow);
+}

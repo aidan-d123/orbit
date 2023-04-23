@@ -1,0 +1,7 @@
+.project-list {
+  margin: 40px;
+  box-sizing: border-box;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, 25%);
+}

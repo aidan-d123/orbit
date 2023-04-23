@@ -1,0 +1,162 @@
+.editor-title {
+  background-color: var(--darkBgColor);
+  color: var(--fontColor);
+  padding: .5rem .5rem .5rem 1rem;
+  border-top-right-radius: .5rem;
+  border-top-left-radius: .5rem;
+  padding-left: 0px;
+}
+
+.editor-title ul {
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+.editor-title .logo {
+  padding-left: 36px;
+}
+
+.editor-title .logo img {
+  margin-right: 10px;
+  filter: invert(100%);
+}
+
+.editor-title .title {
+  margin-right: auto;
+}
+
+.editor-title a {
+  color: var(--fontColor);
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.editor-title li {
+  padding: 0 10px 0 10px;
+}
+
+.editor-title .icon img {
+  filter: invert(100%);
+}
+
+.editor-title .icon img:hover,
+.editor-title .login:hover,
+.editor-title a:hover {
+  cursor: pointer;
+  opacity: 60%;
+}
+
+.editor-title .error-img img {
+  filter: invert(100%);
+  cursor: not-allowed;
+  opacity: 75%;
+}
+
+.title-changer {
+  border: none;
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  padding: none;
+  width: auto;
+  background-color: var(--darkBgColor);
+  color: var(--fontColor);
+}
+
+.title-changer:hover {
+  cursor: pointer;
+}
+
+.dropbtn {
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 30px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--bgColor);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 6px;
+}
+
+.dropdown-content a {
+  padding: 7px;
+  text-decoration: none;
+  display: block;
+  border: 1px solid var(--primary-color);
+  border-radius: 6px;
+}
+
+.dropdown-content a:hover {
+  background-color: #555;
+  text-decoration: underline;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+#root>div>div>div>div.editor-title>ul>li:nth-child(3)>p {
+  font-size: 0.9em;
+  color: var(--secondaryFontColor);
+
+}
+
+.editor-title .fading {
+  font-size: 0.9em;
+  color: var(--secondaryFontColor);
+  -webkit-animation-duration: 2s;
+  -webkit-animation-name: fading;
+  animation-duration: 1s;
+  animation-name: fading;
+}
+
+@-webkit-keyframes fading {
+  from {
+    color: var(--fontColor);
+  }
+
+  to {
+    color: var(--secondaryFontColor);
+
+  }
+}
+
+@keyframes fading {
+  from {
+    color: var(--fontColor);
+  }
+
+  to {
+    color: var(--secondaryFontColor);
+
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinning {
+    animation: App-logo-spin infinite 2s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

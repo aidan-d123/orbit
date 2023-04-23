@@ -1,0 +1,87 @@
+.modal-backdrop {
+  position: fixed;
+  margin: 0 auto !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+  min-width: 600px;
+  max-width: 600px;
+  margin: 75px auto;
+  border-radius: 10px;
+  background-color: var(--bgColor);
+  color: var(--fontColor);
+  height: 300px;
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  justify-items: center;
+  align-items: center;
+  position: relative;
+}
+
+.close {
+  grid-column-start: 2;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background-color: var(--darkBgColor);
+  text-align: center;
+  color: var(--fontColor);
+  font-family: Poppins, sans-serif;
+  border: none;
+  font-size: 1em;
+  border: 1px solid var(--fontColor);
+  border-radius: 5px;
+}
+
+.close:hover {
+  color: var(--yellow);
+  cursor: pointer;
+}
+
+.auth-form {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.auth-form input {
+  display: inline-block;
+  margin: 5px 0px 5px 0px;
+  font-size: 1.25em;
+}
+
+
+.auth-form h2 {
+  display: inline-block;
+}
+
+.options {
+  justify-content: center;
+  align-items: center;
+}
+
+.login-btn {
+  margin-top: 10px;
+}
+
+.form-error {
+  grid-row-start: 2;
+  grid-column-start: 1;
+  grid-column-end: -1;
+}
+
+.forgot-password {
+  display: inline-block;
+  padding-left: 45px;
+  color: var(--fontColor);
+}
+
+.forgot-password:hover {
+  cursor: pointer;
+  color: var(--secondaryFontColor)
+}
