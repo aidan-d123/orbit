@@ -55,7 +55,7 @@ export default function EditorTitle(props) {
 
     const themes = [
         { value: "material-darker", label: "Satellite" },
-        { value: "material-ocean", label: "Transite" },
+        { value: "material-ocean", label: "Transit" },
         { value: "material-palenight", label: "Gravity" },
         { value: "material", label: "Comet" }
     ]
