@@ -96,9 +96,6 @@ export const useSimulator = () => {
         let bits = 0
 
         let source = readRegister(rs1) + imm
-        console.log(source.toString(16))
-        source = source < DATA_BEGIN ? HEAP_BEGIN + source : source
-        console.log(source.toString(16))
         let newData = JSON.parse(JSON.stringify(dataMemory))
 
         for (let i = 0; i < n; i++) {
@@ -136,13 +133,12 @@ export const useSimulator = () => {
         let hexString
 
         const destination = readRegister(rs1)
-        let address = HEAP_BEGIN + destination + imm
+        let address = destination + imm
 
         let nBytes = n * 2
 
         if (value >= 0) {
             hexString = value.toString(16)
-            console.log(hexString)
             if (hexString.length < nBytes) {
                 hexString = "0".repeat(nBytes - hexString.length) + hexString
             } else if (hexString.length > nBytes) {
