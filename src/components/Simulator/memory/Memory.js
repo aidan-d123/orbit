@@ -9,13 +9,10 @@ import { useMemorySegments } from "../../../hooks/riscvHooks/riscv/useMemorySegm
 import Select from 'react-select'
 
 export default function Memory(props) {
-  const { DATA_BEGIN, HEAP_BEGIN, STACK_BEGIN } = useMemorySegments()
+  const { TEXT_BEGIN, DATA_BEGIN, HEAP_BEGIN, STACK_BEGIN } = useMemorySegments()
   const { dataMemory, memory } = props
-  const [chunkedMemory, setChunkedMemory] = useState([])
-  const [chunkedInstructions, setChunkedInstructions] = useState([])
-  const [memoryStart, setMemoryStart] = useState(DATA_BEGIN)
-  const [instructionStart, setInstructionStart] = useState(0)
-  const [segment, setSegment] = useState("text")
+  const [displayMemory, setDisplayMemory] = useState([])
+  const [memoryStart, setMemoryStart] = useState(0)
   const segments = [
     { value: "text", label: "text" },
     { value: "data", label: "data" },
@@ -40,51 +37,56 @@ export default function Memory(props) {
     }
   }
 
-  useEffect(() => {
+  const initMem = (arr, start) => {
     let chunks = []
-    if (dataMemory && dataMemory.length > 0) {
-      const newDataMemory = JSON.parse(JSON.stringify(dataMemory))
-      newDataMemory.sort(compare)
-      for (let i = memoryStart; i < memoryStart + 52; i++) {
-        let foundData = newDataMemory.find(x => x.address === i)
+    if (arr && arr.length > 0) {
+      console.log(arr)
+      const newArr = JSON.parse(JSON.stringify(arr))
+      newArr.sort(compare)
+      for (let i = start; i < start + 52; i++) {
+        let foundData = newArr.find(x => x.address === i)
         chunks.push(foundData !== undefined ? foundData.value : 0)
       }
     } else {
-      for (let i = memoryStart; i < memoryStart + 52; i++) {
+      for (let i = start; i < start + 52; i++) {
         chunks.push(0)
       }
     }
-    chunks = arrayChunk(chunks)
-    setChunkedMemory(chunks)
-  }, [dataMemory, memoryStart])
+    return arrayChunk(chunks)
+  }
 
   useEffect(() => {
-    let chunks = []
-    if (memory && memory.length > 0) {
-      const newMemory = JSON.parse(JSON.stringify(memory))
-      for (let i = instructionStart; i < instructionStart + 52; i++) {
-        chunks.push(newMemory[i] !== undefined ? newMemory[i] : 0)
-      }
-    } else {
-      for (let i = instructionStart; i < instructionStart + 52; i++) {
-        chunks.push(0)
-      }
+    let programMem = []
+
+    if (memory) {
+      let structuredMem = []
+      memory.forEach((mem, address) => {
+        structuredMem.push({ hexAddress: address.toString(16), address, value: mem })
+      })
+      programMem = programMem.concat(structuredMem)
     }
-    chunks = arrayChunk(chunks)
-    setChunkedInstructions(chunks)
-  }, [memory, instructionStart])
+
+    if (dataMemory) {
+      programMem = programMem.concat(dataMemory)
+    }
+
+    setDisplayMemory(initMem(programMem, memoryStart))
+  }, [memory, dataMemory, memoryStart])
+
+  useEffect(() => {
+    if (displayMemory) {
+      console.log(displayMemory)
+    }
+  }, [displayMemory])
 
   const changeSegment = segment => {
     if (segment === "data") {
-      setSegment(segment)
       setMemoryStart(DATA_BEGIN)
     } else if (segment === "stack") {
-      setSegment(segment)
       setMemoryStart(STACK_BEGIN - 36)
     } else if (segment === "text") {
-      setSegment(segment)
+      setMemoryStart(TEXT_BEGIN)
     } else if (segment === "heap") {
-      setSegment(segment)
       setMemoryStart(HEAP_BEGIN)
     }
   }
@@ -106,10 +108,9 @@ export default function Memory(props) {
     return 0
   }
 
-  const getAddress = (address, i) => {
-    let newAddress = (address + (i * 4)).toString(16)
-    newAddress = newAddress.length === 8 ? address : "0".repeat(8 - newAddress.length) + newAddress
-    return newAddress
+  const getAddress = (address) => {
+    let newAddress = address.toString(16)
+    return newAddress.length === 8 ? newAddress : "0".repeat(8 - newAddress.length) + newAddress
   }
 
   return (
@@ -125,11 +126,11 @@ export default function Memory(props) {
               <th>+3</th>
             </tr>
           </thead>
-          {(segment === "data" || segment === "stack" || segment === "heap") && <tbody>
-            {chunkedMemory.length > 0 && (
-              chunkedMemory.map((row, i) => (
+          {displayMemory && <tbody>
+            {displayMemory.length > 0 && (
+              displayMemory.map((row, i) => (
                 <tr scope="row">
-                  <td className="mem">0x{(memoryStart + (i * 4)).toString(16)}</td>
+                  <td className="mem">0x{getAddress(memoryStart + (i * 4))}</td>
                   {row.map((col, j) => (
                     <td>{col}</td>
                   ))}
@@ -137,38 +138,18 @@ export default function Memory(props) {
               ))
             )}
           </tbody>}
-
-          {segment === "text" && <tbody>
-            {chunkedInstructions.map((row, i) => (
-              <tr scope="row">
-                <td className="mem">0x{getAddress(instructionStart, i)}</td>
-                {row.map((col) => (
-                  <td>{col}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>}
         </table>
       </div>
       <div className="mem-buttons">
         <div className="segment-select-container" >
           <Select placeholder="Memory Segment" options={segments} onChange={(option) => { changeSegment(option.value) }} styles={colourStyles} className="theme-selector" />
         </div>
-        {segment === "text" && instructionStart >= 4 && <button className="mem-button mem-button-left" onClick={() => { setInstructionStart(instructionStart - 4) }}>Up</button>}
-        {segment === "text" && instructionStart < 4 && <button className="mem-button mem-button-left unclickable">Up</button>}
-        {segment === "text" && <button className="mem-button mem-button-right" onClick={() => { setInstructionStart(instructionStart + 4) }}>Down</button>}
 
-        {segment === "data" && memoryStart >= DATA_BEGIN + 4 && <button className="mem-button mem-button-left" onClick={() => { setMemoryStart(memoryStart - 4) }}>Up</button>}
-        {segment === "data" && memoryStart < DATA_BEGIN + 4 && <button className="mem-button mem-button-left unclickable">Up</button>}
-        {segment === "data" && <button className="mem-button mem-button-right" onClick={() => { setMemoryStart(memoryStart + 4) }}>Down</button>}
-
-        {segment === "heap" && <button className="mem-button mem-button-left" onClick={() => { setMemoryStart(memoryStart - 4) }}>Up</button>}
-        {segment === "heap" && <button className="mem-button mem-button-right" onClick={() => { setMemoryStart(memoryStart + 4) }}>Down</button>}
-
-        {segment === "stack" && <button className="mem-button mem-button-left" onClick={() => { setMemoryStart(memoryStart - 4) }}>Up</button>}
-        {segment === "stack" && memoryStart <= STACK_BEGIN - 40 && <button className="mem-button mem-button-right" onClick={() => { setMemoryStart(memoryStart + 4) }}>Down</button>}
-        {segment === "stack" && memoryStart > STACK_BEGIN - 40 && <button className="mem-button mem-button-right unclickable">Down</button>}
+        {memoryStart >= 4 && <button className="mem-button mem-button-left" onClick={() => { setMemoryStart(memoryStart - 4) }}>Up</button>}
+        {memoryStart < 4 && <button className="mem-button mem-button-left unclickable">Up</button>}
+        {memoryStart < STACK_BEGIN - 36 && <button className="mem-button mem-button-right" onClick={() => { setMemoryStart(memoryStart + 4) }}>Down</button>}
+        {memoryStart >= STACK_BEGIN - 36 && <button className="mem-button mem-button-right unclickable">Down</button>}
       </div>
-    </div>
+    </div >
   )
 }
