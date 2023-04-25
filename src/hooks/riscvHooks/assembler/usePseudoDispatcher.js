@@ -231,7 +231,6 @@ export const usePseudoDispatcher = () => {
                     let imm = getNumber(line[2])
                     // 0 evalutes to false
                     if ((imm && imm !== undefined) || imm === 0) {
-                        console.log(imm)
                         if ((imm >= -2048) && (imm <= 2047)) {
                             return [["addi", line[1], "x0", imm.toString()]]
                         }

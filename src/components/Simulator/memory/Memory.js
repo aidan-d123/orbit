@@ -73,12 +73,6 @@ export default function Memory(props) {
     setDisplayMemory(initMem(programMem, memoryStart))
   }, [memory, dataMemory, memoryStart])
 
-  useEffect(() => {
-    if (displayMemory) {
-      console.log(displayMemory)
-    }
-  }, [displayMemory])
-
   const changeSegment = segment => {
     if (segment === "data") {
       setMemoryStart(DATA_BEGIN)
