@@ -12,11 +12,10 @@ import { useEffect, useRef, useState } from "react"
 
 export default function Simulator(props) {
   const { talInstructions, data } = props
-  const { setUpComponents, operate, programCounter, memory, dataMemory, registers, currentRegister } = useSimulator()
+  const { setUpComponents, operate, programCounter, memory, registers, currentRegister } = useSimulator()
   const [storage, setStorage] = useState("reg")
 
   const consoleRef = useRef(null)
-
   const currentRef = useRef(null)
 
   useEffect(() => {
@@ -53,7 +52,7 @@ export default function Simulator(props) {
           <button class={`stor-tab stor-tab-right ${storage === "console" ? "selected-tab" : ""}`} onClick={() => { setStorage("console") }}>Console</button>
         </div>
         {storage === "reg" && <Registers registers={registers} programCounter={programCounter} currentRegister={currentRegister} />}
-        {storage === "mem" && <Memory dataMemory={dataMemory} memory={memory} />}
+        {storage === "mem" && <Memory memory={memory} />}
         {storage === "console" && <div className="console-container">
           <textarea ref={consoleRef} placeholder="Console Output" className="console" readOnly />
         </div>}

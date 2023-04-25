@@ -42,7 +42,6 @@ export const useRelocation = () => {
 
     const relocateLoad = (inst, symbolTable) => {
         if (checkArgsLength(inst.talLine, 3)) {
-            console.log(inst)
             let matchedSymbol
             let imm
             for (const symbol of symbolTable) {
