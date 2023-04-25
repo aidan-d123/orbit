@@ -229,9 +229,10 @@ export const usePseudoDispatcher = () => {
                 // li = (addi) OR (lui AND addi)
                 if (checkArgsLength(line, 3)) {
                     let imm = getNumber(line[2])
-                    if (imm && imm !== undefined) {
+                    // 0 evalutes to false
+                    if ((imm && imm !== undefined) || imm === 0) {
+                        console.log(imm)
                         if ((imm >= -2048) && (imm <= 2047)) {
-                            console.log(["addi", line[1], "x0", imm.toString()])
                             return [["addi", line[1], "x0", imm.toString()]]
                         }
                         else if (((imm > 2047) && (imm <= 2147483647)) || ((imm < -2048) && (imm >= -2147483648))) {
