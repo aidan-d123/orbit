@@ -12,6 +12,7 @@ export const useSimulator = () => {
     const setUpComponents = (instructions, data) => {
         let instMemory = assignInstructionMemory(instructions)
         setMemory(JSON.parse(JSON.stringify(instMemory.concat(data))))
+        setProgramCounter(0)
     }
 
     const operate = (inst) => {
