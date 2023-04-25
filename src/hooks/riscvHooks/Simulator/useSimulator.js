@@ -7,15 +7,17 @@ export const useSimulator = () => {
     const [memory, setMemory] = useState([])
     const { registers, asignRegisters, readRegister, currentRegister } = useRegisters()
     const [programCounter, setProgramCounter] = useState(0)
+    const [instructionLength, setInstructionLength] = useState(0)
     const { invertNegative, getNumber } = useUtils()
 
     const setUpComponents = (instructions, data) => {
         let instMemory = assignInstructionMemory(instructions)
         setMemory(JSON.parse(JSON.stringify(instMemory.concat(data))))
         setProgramCounter(0)
+        setInstructionLength(instructions.length * 4)
     }
 
-    const operate = (inst) => {
+    const operate = (inst, setConsoleError) => {
         switch (inst[0]) {
             case "lui": uTypeOperation(inst[1], inst[2], false); break
             case "auipc": uTypeOperation(inst[1], inst[2], true); break
@@ -51,9 +53,9 @@ export const useSimulator = () => {
             case "bge": bTypeOperation(inst[1], inst[2], inst[3], ge); break
             case "bltu": bTypeUnsignedOperation(inst[1], inst[2], inst[3], lt); break
             case "bgeu": bTypeUnsignedOperation(inst[1], inst[2], inst[3], ge); break
-            case "sb": sTypeOperation(inst[1], inst[2], inst[3], 1); break
-            case "sh": sTypeOperation(inst[1], inst[2], inst[3], 2); break
-            case "sw": sTypeOperation(inst[1], inst[2], inst[3], 4); break
+            case "sb": sTypeOperation(inst[1], inst[2], inst[3], 1, setConsoleError); break
+            case "sh": sTypeOperation(inst[1], inst[2], inst[3], 2, setConsoleError); break
+            case "sw": sTypeOperation(inst[1], inst[2], inst[3], 4, setConsoleError); break
         }
     }
 
@@ -123,7 +125,7 @@ export const useSimulator = () => {
         setProgramCounter(programCounter + 4)
     }
 
-    const sTypeOperation = (rs2, imm, rs1, n) => {
+    const sTypeOperation = (rs2, imm, rs1, n, setConsoleError) => {
         let newData = JSON.parse(JSON.stringify(memory))
 
         let value = readRegister(rs2)
@@ -132,45 +134,49 @@ export const useSimulator = () => {
         const destination = readRegister(rs1)
         let address = destination + imm
 
-        let nBytes = n * 2
-
-        if (value >= 0) {
-            hexString = value.toString(16)
-            if (hexString.length < nBytes) {
-                hexString = "0".repeat(nBytes - hexString.length) + hexString
-            } else if (hexString.length > nBytes) {
-                hexString = hexString.slice(-nBytes)
-            }
+        if (address < instructionLength) {
+            setConsoleError(`Error: Memory access violation. Attempted to write data to a read-only memory address (0x${address.toString(16)}) that is currently occupied by an instruction`)
         } else {
-            hexString = (value >>> 0).toString(16).slice(-nBytes)
-            hexString = hexString.length === nBytes ? hexString : "1".repeat(nBytes - hexString.length) + hexString
-        }
+            let nBytes = n * 2
 
-        hexString = hexString.match(/.{1,2}/g).reverse()
-
-        hexString.forEach((string, index) => {
-            const newValue = parseInt(string, 16)
-            const newAddress = address + index
-
-            const foundAddress = isAddressTaken(newAddress)
-            if (foundAddress.length > 0) {
-                newData.map(mem => {
-                    if (mem.address === newAddress) {
-                        mem.value = newValue
-                    }
-                    return mem
-                })
+            if (value >= 0) {
+                hexString = value.toString(16)
+                if (hexString.length < nBytes) {
+                    hexString = "0".repeat(nBytes - hexString.length) + hexString
+                } else if (hexString.length > nBytes) {
+                    hexString = hexString.slice(-nBytes)
+                }
             } else {
-                newData.push({
-                    hexAddress: newAddress.toString(16),
-                    address: newAddress,
-                    value: newValue
-                })
+                hexString = (value >>> 0).toString(16).slice(-nBytes)
+                hexString = hexString.length === nBytes ? hexString : "1".repeat(nBytes - hexString.length) + hexString
             }
-        })
 
-        setMemory(newData)
-        setProgramCounter(programCounter + 4)
+            hexString = hexString.match(/.{1,2}/g).reverse()
+
+            hexString.forEach((string, index) => {
+                const newValue = parseInt(string, 16)
+                const newAddress = address + index
+
+                const foundAddress = isAddressTaken(newAddress)
+                if (foundAddress.length > 0) {
+                    newData.map(mem => {
+                        if (mem.address === newAddress) {
+                            mem.value = newValue
+                        }
+                        return mem
+                    })
+                } else {
+                    newData.push({
+                        hexAddress: newAddress.toString(16),
+                        address: newAddress,
+                        value: newValue
+                    })
+                }
+            })
+
+            setMemory(newData)
+            setProgramCounter(programCounter + 4)
+        }
     }
 
     // J Type

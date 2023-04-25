@@ -22,6 +22,13 @@ export default function Simulator(props) {
     setUpComponents(talInstructions, data)
   }, [])
 
+  const setConsoleError = msg => {
+    setStorage("console")
+    setTimeout(() => {
+      consoleRef.current.value = msg
+      consoleRef.current.classList.add("console-error")
+    })
+  }
   const dump = () => {
     setStorage("console")
     setTimeout(() => {
@@ -31,6 +38,7 @@ export default function Simulator(props) {
       }, 3000)
 
       consoleRef.current.value = dumpLog
+      consoleRef.current.classList.remove("console-error")
     })
   }
 
@@ -43,7 +51,7 @@ export default function Simulator(props) {
 
   return (
     <div className="simulator">
-      <Instructions talInstructions={talInstructions} programCounter={programCounter} operate={operate} dump={dump} setStorage={setStorage} currentRef={currentRef} />
+      <Instructions talInstructions={talInstructions} programCounter={programCounter} operate={operate} dump={dump} setStorage={setStorage} currentRef={currentRef} setConsoleError={setConsoleError} />
 
       <div className="storage">
         <div className="storage-tabs">
