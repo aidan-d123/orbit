@@ -17,11 +17,14 @@ import CodeMirror from "codemirror"
 import "./ProjectPreview.css"
 import { Link } from 'react-router-dom'
 import Delete from "../images/delete.svg"
+import Confirm from "../images/confirm.svg"
+import Cancel from "../images/cancel.svg"
 
 export default function ProjectPreview(props) {
   const { code, title, link, create, handleClick } = props
   const { registers, instructions, keywords } = useRegex()
-  const [theme, setTheme] = useState("ayu-mirage")
+  const [theme, setTheme] = useState("material-darker")
+  const [deleting, setDeleting] = useState(false)
 
   // retrieve selected theme from LocalStorage
   useEffect(() => {
@@ -131,9 +134,12 @@ export default function ProjectPreview(props) {
     <div className='sub-editor-container grow'>
       <div className='sub-editor-title'>
         <Link to={!create ? `../project/${link}` : `../project/new`}>
-          <span title={title}>{title.length < 15 ? title : title.substring(0, 15) + "..."}</span>
+          <span title={title}>{deleting ? "Are you sure?" : title.length < 15 ? title : title.substring(0, 15) + "..."}</span>
         </Link>
-        {!create && <img className="delete grow" src={Delete} onClick={() => { handleClick(link) }} />}
+        {!create && !deleting && <img className="delete grow" src={Delete} onClick={() => { setDeleting(true) }} />}
+        {!create && deleting && <img className="confirm grow" src={Confirm} onClick={() => { handleClick(link) }} />}
+        {!create && deleting && <img className="delete grow" src={Cancel} onClick={() => { setDeleting(false) }} />}
+
       </div>
       <Link to={link ? (!create ? `../project/${link}` : `../project/new`) : "#"}>
         <div className='sub-subcontainer' ref={wrapperRef}>
