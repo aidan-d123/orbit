@@ -20,24 +20,33 @@
     position: relative;
   }
 
-  .delete {
-    position: absolute;
-    right: 13px;
-    top: 13px;
-  }
-
-
   .sub-subcontainer {
     height: 50vh;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
 
-  #root>div>div>div>div>div>div>div>img {
+
+  .delete {
+    position: absolute;
+    right: 13px;
+    top: 13px;
     filter: invert(17%) sepia(68%) saturate(5851%) hue-rotate(340deg) brightness(88%) contrast(96%);
     height: 20px;
   }
 
-  #root>div>div>div>div>div>div>div>img:hover {
+  .delete:hover {
+    cursor: pointer;
+  }
+
+  .confirm {
+    position: absolute;
+    right: 39px;
+    top: 13px;
+    filter: invert(92%) sepia(18%) saturate(767%) hue-rotate(28deg) brightness(91%) contrast(101%);
+    height: 20px;
+  }
+
+  .confirm:hover {
     cursor: pointer;
   }
 
