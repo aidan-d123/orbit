@@ -10,7 +10,7 @@ import Select from 'react-select'
 
 export default function Memory(props) {
   const { TEXT_BEGIN, DATA_BEGIN, HEAP_BEGIN, STACK_BEGIN } = useMemorySegments()
-  const { dataMemory, memory } = props
+  const { memory } = props
   const [displayMemory, setDisplayMemory] = useState([])
   const [memoryStart, setMemoryStart] = useState(0)
   const segments = [
@@ -40,38 +40,26 @@ export default function Memory(props) {
   const initMem = (arr, start) => {
     let chunks = []
     if (arr && arr.length > 0) {
-      console.log(arr)
       const newArr = JSON.parse(JSON.stringify(arr))
       newArr.sort(compare)
       for (let i = start; i < start + 52; i++) {
+
         let foundData = newArr.find(x => x.address === i)
-        chunks.push(foundData !== undefined ? foundData.value : 0)
+        let hexValue = (foundData !== undefined ? foundData.value : 0).toString(16)
+        hexValue = hexValue.length === 2 ? hexValue : `0${hexValue}`
+        chunks.push(hexValue)
       }
     } else {
       for (let i = start; i < start + 52; i++) {
-        chunks.push(0)
+        chunks.push("00")
       }
     }
     return arrayChunk(chunks)
   }
 
   useEffect(() => {
-    let programMem = []
-
-    if (memory) {
-      let structuredMem = []
-      memory.forEach((mem, address) => {
-        structuredMem.push({ hexAddress: address.toString(16), address, value: mem })
-      })
-      programMem = programMem.concat(structuredMem)
-    }
-
-    if (dataMemory) {
-      programMem = programMem.concat(dataMemory)
-    }
-
-    setDisplayMemory(initMem(programMem, memoryStart))
-  }, [memory, dataMemory, memoryStart])
+    setDisplayMemory(initMem(memory, memoryStart))
+  }, [memory, memoryStart])
 
   const changeSegment = segment => {
     if (segment === "data") {

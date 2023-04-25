@@ -1,21 +1,17 @@
 // hooks
 import { useState } from "react"
 import { useRegisters } from "./useRegisters"
-import { useMemorySegments } from "../riscv/useMemorySegments"
 import { useUtils } from "../riscv/useUtils"
 
 export const useSimulator = () => {
     const [memory, setMemory] = useState([])
-    const [dataMemory, setDataMemory] = useState()
     const { registers, asignRegisters, readRegister, currentRegister } = useRegisters()
     const [programCounter, setProgramCounter] = useState(0)
-    const { DATA_BEGIN, HEAP_BEGIN } = useMemorySegments()
     const { invertNegative, getNumber } = useUtils()
 
     const setUpComponents = (instructions, data) => {
-        setDataMemory([...data])
-        setProgramCounter(0)
-        assignInstructionMemory(instructions)
+        let instMemory = assignInstructionMemory(instructions)
+        setMemory(JSON.parse(JSON.stringify(instMemory.concat(data))))
     }
 
     const operate = (inst) => {
@@ -96,7 +92,7 @@ export const useSimulator = () => {
         let bits = 0
 
         let source = readRegister(rs1) + imm
-        let newData = JSON.parse(JSON.stringify(dataMemory))
+        let newData = JSON.parse(JSON.stringify(memory))
 
         for (let i = 0; i < n; i++) {
             const newAddress = source + i
@@ -127,7 +123,7 @@ export const useSimulator = () => {
     }
 
     const sTypeOperation = (rs2, imm, rs1, n) => {
-        let newData = JSON.parse(JSON.stringify(dataMemory))
+        let newData = JSON.parse(JSON.stringify(memory))
 
         let value = readRegister(rs2)
         let hexString
@@ -172,7 +168,7 @@ export const useSimulator = () => {
             }
         })
 
-        setDataMemory(newData)
+        setMemory(newData)
         setProgramCounter(programCounter + 4)
     }
 
@@ -238,12 +234,17 @@ export const useSimulator = () => {
         setMemory([])
         let endianMemory = []
 
-        instructions.forEach(instruction => {
-            let endian = instruction.machineCode.match(/.{1,2}/g).reverse() //risc-v memory is little endian
-            endianMemory = endianMemory.concat(endian)
+        instructions.forEach((instruction, wordIndex) => {
+            let endianValue = instruction.machineCode.match(/.{1,2}/g).reverse() //risc-v memory is little endian
+            endianValue.forEach((byte, byteIndex) => {
+                const address = (wordIndex * 4) + byteIndex
+                endianMemory.push({
+                    hexAddress: address.toString(16), address, value: parseInt(byte, 16)
+                })
+            })
         })
 
-        setMemory(endianMemory)
+        return endianMemory
     }
 
     const getNegativeNumber = value => {
@@ -261,11 +262,11 @@ export const useSimulator = () => {
     }
 
     const isAddressTaken = address => {
-        return dataMemory.filter(mem => {
+        return memory.filter(mem => {
             return mem.address === address
         })
     }
 
-    return { setUpComponents, operate, programCounter, memory, dataMemory, registers, currentRegister }
+    return { setUpComponents, operate, programCounter, memory, registers, currentRegister }
 }
 
