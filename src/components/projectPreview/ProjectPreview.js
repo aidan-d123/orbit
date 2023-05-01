@@ -8,7 +8,7 @@ import 'codemirror/theme/erlang-dark.css'
 
 // hooks
 import { useCallback, useEffect, useState } from 'react'
-import { useRegex } from '../hooks/riscvHooks/riscv/useRegex'
+import { useRegex } from "../../hooks/riscvHooks/riscv/useRegex"
 
 // components
 import CodeMirror from "codemirror"
@@ -16,9 +16,9 @@ import CodeMirror from "codemirror"
 // styles & images
 import "./ProjectPreview.css"
 import { Link } from 'react-router-dom'
-import Delete from "../images/delete.svg"
-import Confirm from "../images/confirm.svg"
-import Cancel from "../images/cancel.svg"
+import Delete from "../../images/delete.svg"
+import Confirm from "../../images/confirm.svg"
+import Cancel from "../../images/cancel.svg"
 
 export default function ProjectPreview(props) {
   const { code, title, link, create, handleClick } = props

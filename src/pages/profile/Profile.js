@@ -2,7 +2,7 @@
 import "./Profile.css"
 
 // components
-import ProjectList from '../../components/ProjectList'
+import ProjectList from '../../components/projectList/ProjectList'
 import Unauthorised from "../../components/unauthorised/Unauthorised";
 
 // hooks

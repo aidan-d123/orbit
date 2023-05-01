@@ -2,10 +2,10 @@
 import "./ProjectList.css"
 
 // hooks
-import { useFirestore } from "../hooks/firebase/useFirestore"
+import { useFirestore } from "../../hooks/firebase/useFirestore"
 
 // components
-import ProjectPreview from "./ProjectPreview"
+import ProjectPreview from "../projectPreview/ProjectPreview"
 
 export default function ProjectList(props) {
     const { deleteDocument } = useFirestore("projects");
