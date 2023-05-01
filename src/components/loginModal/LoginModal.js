@@ -1,9 +1,9 @@
 // styles & images
 import "./LoginModal.css"
 import { useState } from "react"
-import { useLogin } from "../hooks/firebase/useLogin"
-import { useSignup } from "../hooks/firebase/useSignup"
-import { useForgotPassword } from "../hooks/firebase/useForgotPassword"
+import { useLogin } from "../../hooks/firebase/useLogin"
+import { useSignup } from "../../hooks/firebase/useSignup"
+import { useForgotPassword } from "../../hooks/firebase/useForgotPassword"
 
 export default function LoginModal(props) {
     const [email, setEmail] = useState("")

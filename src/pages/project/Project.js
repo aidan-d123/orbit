@@ -10,10 +10,10 @@ import { useFirestore } from "../../hooks/firebase/useFirestore"
 import { useAuthContext } from "../../hooks/firebase/useAuthContext"
 
 // components
-import Editor from "../../components/Editor/Editor";
-import Simulator from "../../components/Simulator/simulator/Simulator";
-import LoginModal from "../../components/LoginModal"
-import EditorTitle from "../../components/Editor/EditorTitle";
+import Editor from "../../components/editor/Editor"
+import Simulator from "../../components/simulator/simulator/Simulator";
+import LoginModal from "../../components/loginModal/LoginModal"
+import EditorTitle from "../../components/editor/EditorTitle";
 import Unauthorised from "../../components/unauthorised/Unauthorised";
 
 export default function Project() {

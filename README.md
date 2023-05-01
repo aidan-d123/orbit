@@ -1,7 +1,9 @@
 # Orbit ![alt text](https://raw.githubusercontent.com/aidan-d123/orbit/main/public/favicons/favicon.ico "Orbit Logo")
 
 
-Orbit is a RISC-V assembly language editor and simulator. It supports the following: 
+[Orbit](https://orbit.adempsey.me/) is a RISC-V assembly language editor and simulator. It supports the following: 
+
+
 ### Instructions
 `add`, `sub`, `sll` `slt` `sltu` `xor` `srl` `sra` `or` `and` `srli` `slli` `srai` `sb` `sh` `sw` `addi` `slti` `sltiu` `xori` `ori` `andi` `lb` `lh` `lw` `lbu` `lhu` `jalr` `beq` `bne` `blt` `bge` `bltu` `bgeu` `jal` `auipc` `lui` `beqz` `bgez` `bgt` `bgtu` `bgtz` `ble` `bleu` `blez` `bltz` `bnez` `j` `jr` `la` `li` `mv` `neg` `nop` `ret` `not` `seqz` `sgtz` `sltz` `snez`. 
 
