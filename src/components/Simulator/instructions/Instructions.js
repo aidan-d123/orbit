@@ -6,7 +6,7 @@ import "./Instructions.css"
 
 export default function Instructions(props) {
 
-  const { talInstructions, programCounter, operate, dump, currentRef, setConsoleError } = props
+  const { talInstructions, programCounter, operate, dump, currentRef, setConsoleError, setConsoleMessage } = props
   const [instructions, setInstructions] = useState([])
   const current = useRef()
 
@@ -25,8 +25,9 @@ export default function Instructions(props) {
 
 
   const handleForward = () => {
-    if ((programCounter / 4) < talInstructions.length) {
-      operate(talInstructions[programCounter / 4].talLine, setConsoleError)
+    console.log(programCounter / 4)
+    if ((programCounter / 4) < talInstructions.length && programCounter >= 0) {
+      operate(talInstructions[programCounter / 4].talLine, setConsoleError, setConsoleMessage)
     }
   }
 

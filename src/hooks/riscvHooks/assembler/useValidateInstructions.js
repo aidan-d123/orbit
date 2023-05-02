@@ -161,6 +161,14 @@ export const useValidateInstructions = () => {
                 setWarnings(prevWarnings => {
                     return [...prevWarnings, { warningMessage: `instruction \"fence\" is unnecessary as Orbit is single threaded`, warningLine: lineNumber }]
                 })
+
+            case /^(?:ecall)$/i.test(inst.talLine[0]):
+                if (checkArgsLength(inst.talLine, 1)) {
+                    return "00000073"
+                } else {
+                    argLengthError(0, inst.talLine, setErrors, lineNumber)
+                    break
+                }
         }
     }
 

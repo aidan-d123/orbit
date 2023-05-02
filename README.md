@@ -8,7 +8,7 @@
 `add`, `sub`, `sll` `slt` `sltu` `xor` `srl` `sra` `or` `and` `srli` `slli` `srai` `sb` `sh` `sw` `addi` `slti` `sltiu` `xori` `ori` `andi` `lb` `lh` `lw` `lbu` `lhu` `jalr` `beq` `bne` `blt` `bge` `bltu` `bgeu` `jal` `auipc` `lui` `beqz` `bgez` `bgt` `bgtu` `bgtz` `ble` `bleu` `blez` `bltz` `bnez` `j` `jr` `la` `li` `mv` `neg` `nop` `ret` `not` `seqz` `sgtz` `sltz` `snez`. 
 
 ### Directives 
-`.data` `.text` `.asciz` `.ascii` `.string` `.word` `.byte`. 
+`.data` `.text` `.asciz` `.word` `.byte`. 
 
 
 ### Editor

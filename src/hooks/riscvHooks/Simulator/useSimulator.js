@@ -2,22 +2,27 @@
 import { useState } from "react"
 import { useRegisters } from "./useRegisters"
 import { useUtils } from "../riscv/useUtils"
+import { useMemorySegments } from "../riscv/useMemorySegments"
 
 export const useSimulator = () => {
     const [memory, setMemory] = useState([])
-    const { registers, asignRegisters, readRegister, currentRegister } = useRegisters()
+    const [initialMemory, setInitialMemory] = useState([])
+    const { registers, asignRegisters, readRegister, currentRegister, resetReg } = useRegisters()
     const [programCounter, setProgramCounter] = useState(0)
     const [instructionLength, setInstructionLength] = useState(0)
     const { invertNegative, getNumber } = useUtils()
+    const { HEAP_BEGIN } = useMemorySegments()
 
     const setUpComponents = (instructions, data) => {
+        setInitialMemory(JSON.parse(JSON.stringify(data)))
+
         let instMemory = assignInstructionMemory(instructions)
         setMemory(JSON.parse(JSON.stringify(instMemory.concat(data))))
         setProgramCounter(0)
         setInstructionLength(instructions.length * 4)
     }
 
-    const operate = (inst, setConsoleError) => {
+    const operate = (inst, setConsoleError, setConsoleMessage) => {
         switch (inst[0]) {
             case "lui": uTypeOperation(inst[1], inst[2], false); break
             case "auipc": uTypeOperation(inst[1], inst[2], true); break
@@ -56,6 +61,7 @@ export const useSimulator = () => {
             case "sb": sTypeOperation(inst[1], inst[2], inst[3], 1, setConsoleError); break
             case "sh": sTypeOperation(inst[1], inst[2], inst[3], 2, setConsoleError); break
             case "sw": sTypeOperation(inst[1], inst[2], inst[3], 4, setConsoleError); break
+            case "ecall": ecall(setConsoleError, setConsoleMessage); break
         }
     }
 
@@ -237,6 +243,83 @@ export const useSimulator = () => {
     const lt = (a, b) => a < b
     const ge = (a, b) => a >= b
 
+    const ecall = (setConsoleError, setConsoleMessage) => {
+        const a0 = readRegister("x10")
+        let a1 = readRegister("x11")
+        let output = ""
+
+        switch (a0) {
+            case 1:
+                setConsoleMessage(readRegister("x11"));
+                setProgramCounter(programCounter + 4)
+                break;
+            case 4:
+                let stringIndex = 0
+                let stringByte
+                let stringArray = JSON.parse(JSON.stringify(memory))
+
+                while (stringByte !== "\n") {
+                    const newAddress = a1 + stringIndex
+                    const filteredMem = stringArray.filter(dat => {
+                        return dat.address === newAddress
+                    })
+
+                    if (filteredMem.length > 0) {
+                        stringByte = String.fromCharCode(parseInt(filteredMem[0].value, 16))
+                    } else {
+                        stringByte = "\n"
+                    }
+                    output += stringByte
+                    stringIndex++
+                }
+                setConsoleMessage(output)
+                setProgramCounter(programCounter + 4)
+                break;
+            case 9:
+                let newData = JSON.parse(JSON.stringify(memory))
+                let address = HEAP_BEGIN
+                let hexString = "00".repeat(a1)
+                hexString = hexString.match(/.{1,2}/g)
+
+                hexString.forEach((string, index) => {
+                    const newValue = parseInt(string, 16)
+                    const newAddress = address + index
+
+                    const foundAddress = isAddressTaken(newAddress)
+                    if (foundAddress.length > 0) {
+                        newData.map(mem => {
+                            if (mem.address === newAddress) {
+                                mem.value = newValue
+                            }
+                            return mem
+                        })
+                    } else {
+                        newData.push({
+                            hexAddress: newAddress.toString(16),
+                            address: newAddress,
+                            value: newValue
+                        })
+                    }
+                })
+
+                setMemory(newData)
+                setProgramCounter(programCounter + 4)
+
+                asignRegisters("x10", HEAP_BEGIN)
+                break;
+            case 10: resetSim(); break;
+            case 11:
+                setConsoleMessage(String.fromCharCode(a1));
+                setProgramCounter(programCounter + 4)
+                break;
+            case 17:
+                setConsoleError(`Exited with error code ${a1}`)
+                resetSim()
+                break;
+            default: setConsoleError(`Invalid ecall ${a0}`)
+        }
+    }
+
     const assignInstructionMemory = instructions => {
         setMemory([])
         let endianMemory = []
@@ -272,6 +355,13 @@ export const useSimulator = () => {
         return memory.filter(mem => {
             return mem.address === address
         })
+    }
+
+    const resetSim = () => {
+        resetReg()
+        let test = JSON.parse(JSON.stringify(initialMemory))
+        setMemory(JSON.parse(JSON.stringify(initialMemory)))
+        setProgramCounter(-1)
     }
 
     return { setUpComponents, operate, programCounter, memory, registers, currentRegister }

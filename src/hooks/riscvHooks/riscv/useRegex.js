@@ -13,7 +13,7 @@ export const useRegex = () => {
     let instructions = regexFromWords([
         "add", "sub", "sll", "slt", "sltu", "xor", "srl", "sra", "or", "and", "srli", "slli", "srai", "sb", "sh", "sw",
         "addi", "slti", "sltiu", "xori", "ori", "andi", "lb", "lh", "lw", "lbu", "lhu", "jalr", "beq", "bne", "blt",
-        "bge", "bltu", "bgeu", "jal", "auipc", "lui", /*pseduos*/ "beqz", "bgez", "bgt", "bgtu", "bgtz", "ble", "bleu",
+        "bge", "bltu", "bgeu", "jal", "auipc", "lui", "ecall", /*pseduos*/ "beqz", "bgez", "bgt", "bgtu", "bgtz", "ble", "bleu",
         "blez", "bltz", "bnez", "j", "jr", "la", "li", "mv", "neg", "nop", "ret", "not", "seqz", "sgtz", "sltz", "snez",
         "fence"
     ], "i");
@@ -44,7 +44,7 @@ export const useRegex = () => {
     // regex expressions for directives
     let keywords = regexFromWords([
         ".data", ".text", ".globl", ".float", ".double",
-        ".asciz", ".ascii", ".string", ".word", ".byte", ".equ"
+        ".asciz", ".word", ".byte"
     ], "i");
 
     return { instructions, fakeLoadInstructions, registers, keywords, rType, iTypeShift, sType, iType, iTypeMem, bType, jType, uType }

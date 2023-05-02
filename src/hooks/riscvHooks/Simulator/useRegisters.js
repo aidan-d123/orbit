@@ -43,6 +43,14 @@ export const useRegisters = () => {
         registerTwentySix, registerTwentySeven, registerTwentyEight, registerTwentyNine, registerThirty, registerThirtyOne
     ]
 
+    let registerFunctions = [
+        setRegisterZero, setRegisterOne, setRegisterTwo, setRegisterThree, setRegisterFour, setRegisterFive, setRegisterSix, setRegisterSeven,
+        setRegisterEight, setRegisterNine, setRegisterTen, setRegisterEleven, setRegisterTwelve, setRegisterThirteen, setRegisterFourteen,
+        setRegisterFifteen, setRegisterSixteen, setRegisterSeventeen, setRegisterEighteen, setRegisterNineteen, setRegisterTwenty,
+        setRegisterTwentyOne, setRegisterTwentyTwo, setRegisterTwentyThree, setRegisterTwentyFour, setRegisterTwentyFive,
+        setRegisterTwentySix, setRegisterTwentySeven, setRegisterTwentyEight, setRegisterTwentyNine, setRegisterThirty, setRegisterThirtyOne
+    ]
+
     const asignRegisters = (register, value) => {
         let newValue;
 
@@ -290,6 +298,12 @@ export const useRegisters = () => {
         }
     }
 
-    return { registers, asignRegisters, readRegister, currentRegister }
+    const resetReg = () => {
+        for (let i = 0; i < registerFunctions.length; i++) {
+            registerFunctions[i](0)
+        }
+    }
+
+    return { registers, asignRegisters, readRegister, currentRegister, resetReg }
 }
 
