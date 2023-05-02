@@ -7,7 +7,7 @@ import Registers from "../registers/Registers"
 import Memory from "../memory/Memory"
 
 // hooks
-import { useSimulator } from "../../../hooks/riscvHooks/Simulator/useSimulator"
+import { useSimulator } from "../../../hooks/riscvHooks/simulator/useSimulator"
 import { useEffect, useRef, useState } from "react"
 
 export default function Simulator(props) {
@@ -29,6 +29,15 @@ export default function Simulator(props) {
       consoleRef.current.classList.add("console-error")
     })
   }
+
+  const setConsoleMessage = msg => {
+    setStorage("console")
+    setTimeout(() => {
+      consoleRef.current.value = msg
+      consoleRef.current.classList.remove("console-error")
+    })
+  }
+
   const dump = () => {
     setStorage("console")
     setTimeout(() => {
@@ -51,7 +60,7 @@ export default function Simulator(props) {
 
   return (
     <div className="simulator">
-      <Instructions talInstructions={talInstructions} programCounter={programCounter} operate={operate} dump={dump} setStorage={setStorage} currentRef={currentRef} setConsoleError={setConsoleError} />
+      <Instructions talInstructions={talInstructions} programCounter={programCounter} operate={operate} dump={dump} setStorage={setStorage} currentRef={currentRef} setConsoleError={setConsoleError} setConsoleMessage={setConsoleMessage} />
 
       <div className="storage">
         <div className="storage-tabs">
