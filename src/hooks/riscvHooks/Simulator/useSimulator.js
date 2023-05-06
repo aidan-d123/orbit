@@ -265,7 +265,7 @@ export const useSimulator = () => {
                     })
 
                     if (filteredMem.length > 0) {
-                        stringByte = String.fromCharCode(parseInt(filteredMem[0].value, 16))
+                        stringByte = String.fromCharCode(filteredMem[0].value)
                     } else {
                         stringByte = "\n"
                     }

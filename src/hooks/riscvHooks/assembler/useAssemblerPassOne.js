@@ -128,16 +128,13 @@ export const useAssemblerPassOne = () => {
                 }
             } break
 
-            case ".asciz":
-            case ".ascii":
-            case ".string":
+            case ".asciiz":
                 checkDataSection(setWarnings, newCurrentLineNumber)
                 if (instructionArguments.length === 1) {
                     let asciiBytes = getAsciiArray(instructionArguments, setErrors, newCurrentLineNumber)
                     if (asciiBytes !== undefined) {
-                        if (directive.charAt(directive.length - 1) === 'z') {
-                            asciiBytes.push("0") // null character for .asciz directive
-                        }
+                        asciiBytes.push("0") // null character for .asciiz directive
+
                         asciiBytes.forEach(byte => {
                             addDataToMem(byte)
                         })
@@ -183,16 +180,84 @@ export const useAssemblerPassOne = () => {
         instructionArguments.forEach(inst => {
             if (checkAscii(inst, setErrors, newCurrentLineNumber)) {
                 let newInst = inst.slice(1, -1)
-                if (newInst.length > 0) {
-                    for (const element of newInst) {
-                        let char = element.charCodeAt(0).toString(16)
-                        array.push(char)
-                    }
-                }
+                array = parseAsciiString(newInst)
             }
         })
 
         return array
+    }
+
+    const parseAsciiString = str => {
+        const codes = [];
+
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charAt(i);
+
+            if (char === '\\') {
+                // Handle escape sequence
+                const nextChar = str.charAt(i + 1);
+                switch (nextChar) {
+                    case '0': // Octal escape sequence
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                        const octalCode = parseInt(str.substring(i + 1, i + 4), 8);
+                        codes.push(octalCode);
+                        i += 3;
+                        break;
+                    case 'x': // Hexadecimal escape sequence
+                        const hexCode = parseInt(str.substring(i + 2, i + 4), 16);
+                        codes.push(hexCode);
+                        i += 3;
+                        break;
+                    case 'n': // Newline
+                        codes.push(10);
+                        i += 1;
+                        break;
+                    case 'r': // Carriage return
+                        codes.push(13);
+                        i += 1;
+                        break;
+                    case 't': // Tab
+                        codes.push(9);
+                        i += 1;
+                        break;
+                    case '\\': // Backslash
+                        codes.push(92);
+                        i += 1;
+                        break;
+                    case '\'': // Single quote
+                        codes.push(39);
+                        i += 1;
+                        break;
+                    case '"': // Double quote
+                        codes.push(34);
+                        i += 1;
+                        break;
+                    case 'b': // Backspace
+                        codes.push(8);
+                        i += 1;
+                        break;
+                    case 'f': // Form feed
+                        codes.push(12);
+                        i += 1;
+                        break;
+                    default:
+                        // Unrecognized escape sequence, push backslash as is
+                        codes.push(92);
+                }
+            } else {
+                // Handle regular character
+                const code = char.charCodeAt(0);
+                codes.push(code);
+            }
+        }
+
+        return codes;
     }
 
     const checkAscii = (str, setErrors, newCurrentLineNumber) => {

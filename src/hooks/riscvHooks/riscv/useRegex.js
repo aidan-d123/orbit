@@ -44,7 +44,7 @@ export const useRegex = () => {
     // regex expressions for directives
     let keywords = regexFromWords([
         ".data", ".text", ".globl", ".float", ".double",
-        ".asciz", ".word", ".byte"
+        ".asciiz", ".word", ".byte"
     ], "i");
 
     return { instructions, fakeLoadInstructions, registers, keywords, rType, iTypeShift, sType, iType, iTypeMem, bType, jType, uType }

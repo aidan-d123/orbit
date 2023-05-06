@@ -8,7 +8,7 @@
 `add` `sub` `sll` `slt` `sltu` `xor` `srl` `sra` `or` `and` `srli` `slli` `srai` `sb` `sh` `sw` `addi` `slti` `sltiu` `xori` `ori` `andi` `lb` `lh` `lw` `lbu` `lhu` `jalr` `beq` `bne` `blt` `bge` `bltu` `bgeu` `jal` `auipc` `lui` `beqz` `bgez` `bgt` `bgtu` `bgtz` `ble` `bleu` `blez` `bltz` `bnez` `j` `jr` `la` `li` `mv` `neg` `nop` `ret` `not` `seqz` `sgtz` `sltz` `snez`
 
 ### Directives 
-`.data` `.text` `.asciz` `.word` `.byte`
+`.data` `.text` `.asciiz` `.word` `.byte`
 
 ### Enviroment Calls
 The environmental calls are compatible with [Venus' ecalls](https://github.com/kvakil/venus/wiki/Environmental-Calls).
