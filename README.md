@@ -5,10 +5,10 @@
 
 
 ### Instructions
-`add`, `sub`, `sll` `slt` `sltu` `xor` `srl` `sra` `or` `and` `srli` `slli` `srai` `sb` `sh` `sw` `addi` `slti` `sltiu` `xori` `ori` `andi` `lb` `lh` `lw` `lbu` `lhu` `jalr` `beq` `bne` `blt` `bge` `bltu` `bgeu` `jal` `auipc` `lui` `beqz` `bgez` `bgt` `bgtu` `bgtz` `ble` `bleu` `blez` `bltz` `bnez` `j` `jr` `la` `li` `mv` `neg` `nop` `ret` `not` `seqz` `sgtz` `sltz` `snez`. 
+`add` `sub` `sll` `slt` `sltu` `xor` `srl` `sra` `or` `and` `srli` `slli` `srai` `sb` `sh` `sw` `addi` `slti` `sltiu` `xori` `ori` `andi` `lb` `lh` `lw` `lbu` `lhu` `jalr` `beq` `bne` `blt` `bge` `bltu` `bgeu` `jal` `auipc` `lui` `beqz` `bgez` `bgt` `bgtu` `bgtz` `ble` `bleu` `blez` `bltz` `bnez` `j` `jr` `la` `li` `mv` `neg` `nop` `ret` `not` `seqz` `sgtz` `sltz` `snez`
 
 ### Directives 
-`.data` `.text` `.asciz` `.word` `.byte`. 
+`.data` `.text` `.asciz` `.word` `.byte`
 
 ### Enviroment Calls
 The environmental calls are compatible with [Venus' ecalls](https://github.com/kvakil/venus/wiki/Environmental-Calls).
@@ -16,7 +16,7 @@ The environmental calls are compatible with [Venus' ecalls](https://github.com/k
 | ------------- |:-------------:| -----:|
 | 1      | print_int |	prints integer in `a1` |
 | 4      | print_string	| prints the null-terminated string whose address is in `a1` |
-| 9 | sbrk	| allocates a1 bytes on the heap, returns pointer to start in `a0` |
+| 9 | sbrk	| allocates `a1` bytes on the heap, returns pointer to start in `a0` |
 | 10      | exit |	ends the program  |
 | 11      | print_character |	prints ASCII character in `a1` |
 | 17 |  exit2 |	ends the program with return code in `a1` |
