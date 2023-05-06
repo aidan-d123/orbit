@@ -133,7 +133,7 @@ export const useAssemblerPassOne = () => {
                 if (instructionArguments.length === 1) {
                     let asciiBytes = getAsciiArray(instructionArguments, setErrors, newCurrentLineNumber)
                     if (asciiBytes !== undefined) {
-                        asciiBytes.push("0") // null character for .asciz directive
+                        asciiBytes.push("0") // null character for .asciiz directive
 
                         asciiBytes.forEach(byte => {
                             addDataToMem(byte)
