@@ -5,28 +5,26 @@ import './App.css';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 // pages
-import Profile from './pages/profile/Profile';
+// import Profile from './pages/profile/Profile';
 import Project from './pages/project/Project';
 
 function App() {
   return (
-    <div className="App">
+    <div className="app-wrapper">
       <BrowserRouter>
-        <div className='container'>
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="project/new" />
-            </Route>
-            <Route path="/project/:id">
-              <Project />
-            </Route>
-            <Route path="/profile/:id">
-              <Profile />
-            </Route>
-          </Switch>
-        </div>
-      </BrowserRouter>
-    </div>
+        <Switch>
+          <Route exact path="/">
+            <Redirect to="project/new" />
+          </Route>
+          <Route path="/project/:id">
+            <Project />
+          </Route>
+          {/* <Route path="/profile/:id">
+            <Profile />
+          </Route> */}
+        </Switch>
+      </BrowserRouter >
+    </div >
   );
 }
 

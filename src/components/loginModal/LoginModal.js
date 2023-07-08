@@ -42,87 +42,107 @@ export default function LoginModal(props) {
     }
 
     return (
-        <div className="modal-backdrop">
-            <div className="modal">
-                <button className="close" onClick={() => { setShowModal(false) }}>x</button>
+        <div className="modal-backdrop" onMouseDown={e => {
+            if (e.target !== e.currentTarget) {
+                return;
+            } else {
+                setShowModal(false);
+            }
+        }}>
+            <div className="center" >
+                {!signingUp && !isForgotPassword && (
+                    <form onSubmit={handleLogin}>
+                        <h1>Login</h1>
+                        <div className="txt_field">
+                            <input
+                                required
+                                type="email"
+                                value={loginEmail}
+                                onChange={e => { setLoginEmail(e.target.value) }} />
+                            <span></span>
+                            <label>Email</label>
+                        </div>
+                        <div className="txt_field">
+                            <input
+                                required
+                                type="password"
+                                value={loginPassword}
+                                onChange={e => { setLoginPassword(e.target.value) }} />
+                            <span></span>
+                            <label>Password</label>
+                        </div>
+                        <div className="pass" onClick={() => { setIsForgotPassword(true) }}>Forgot Password?</div>
+                        <input className="submit" type="submit" value="Login" />
+                        <div className="signup_link">
+                            Don't have an account? <a href="#" onClick={() => setSigningUp(true)}>Signup</a>
+                        </div>
+                    </form>)}
+
                 {signingUp && !isForgotPassword && (
-                    <form
-                        className="auth-form"
-                        onSubmit={handleSignup}>
-                        <h2>Sign up</h2>
-                        <input
-                            required
-                            type="email"
-                            value={email}
-                            placeholder="Email"
-                            onChange={e => { setEmail(e.target.value) }} />
-                        <input
-                            required
-                            type="password"
-                            value={password}
-                            placeholder="Password"
-                            onChange={e => { setPassword(e.target.value) }} />
-                        <input
-                            required
-                            type="text"
-                            value={displayName}
-                            placeholder="First Name"
-                            onChange={e => { setDisplayName(e.target.value) }} />
-                        {!isSignupPending && <button className="btn login-btn">Sign up</button>}
-                        {isSignupPending && <button className="btn login-btn" disabled>Signing up...</button>}
+                    <form onSubmit={handleSignup} >
+                        <h1>Sign Up</h1>
+                        <div className="txt_field">
+                            <input
+                                required
+                                type="text"
+                                value={displayName}
+                                onChange={e => { setDisplayName(e.target.value) }} />
+                            <span></span>
+                            <label>First Name</label>
+                        </div>
+                        <div className="txt_field">
+                            <input
+                                required
+                                type="email"
+                                value={email}
+                                onChange={e => { setEmail(e.target.value) }} />
+                            <span></span>
+                            <label>Email</label>
+                        </div>
+                        <div className="txt_field">
+                            <input
+                                required
+                                type="password"
+                                value={password}
+                                onChange={e => { setPassword(e.target.value) }} />
+                            <span></span>
+                            <label>Password</label>
+                        </div>
+                        <div className="pass" onClick={() => { setIsForgotPassword(true) }}>Forgot Password?</div>
+                        <input className="submit" type="submit" value="Sign up" />
+                        <div className="signup_link">
+                            Already have an account? <a href="#" onClick={() => setSigningUp(false)}>Login</a>
+                        </div>
                     </form>
                 )}
 
-                {!signingUp && !isForgotPassword && (
-                    <form className="auth-form"
-                        onSubmit={handleLogin}>
-                        <h2>Login</h2>
-                        <input
-                            required
-                            type="email"
-                            value={loginEmail}
-                            placeholder="Email"
-                            onChange={e => { setLoginEmail(e.target.value) }} />
-                        <input
-                            required
-                            type="password"
-                            value={loginPassword}
-                            placeholder="Password"
-                            onChange={e => { setLoginPassword(e.target.value) }} />
-                        {!isLoginPending && <button className="btn login-btn">Login</button>}
-                        {!isLoginPending && <p className="forgot-password" onClick={() => {
-                            setIsForgotPassword(true)
-                            setSigningUp(true)
-                        }}>Forgot Password?</p>}
-                        {isLoginPending && <button className="btn login-btn" disabled>Logging in...</button>}
-                    </form>)}
                 {isForgotPassword && (
-                    <form className="auth-form"
-                        onSubmit={handleForgotPassword}>
-                        <h2>Forgot Password</h2>
-                        <input
-                            required
-                            type="email"
-                            value={forgotPasswordEmail}
-                            placeholder="Email"
-                            onChange={e => { setForgotPasswordEmail(e.target.value) }} />
-                        {!isForgotPasswordPending && <button className="btn login-btn">Submit</button>}
-                        {isForgotPasswordPending && <button className="btn login-btn" disabled>Submitting...</button>}
+                    <form onSubmit={handleForgotPassword}>
+                        <h1>Forgot Password</h1>
+                        <div className="txt_field">
+                            <input
+                                required
+                                type="email"
+                                value={forgotPasswordEmail}
+                                onChange={e => { setForgotPasswordEmail(e.target.value) }} />
+                            <span></span>
+                            <label>Email</label>
+                        </div>
+                        <input className="submit" type="submit" value="Submit" />
+                        <div className="signup_link">
+                            Already have an account? <a href="#" onClick={() => {
+                                setSigningUp(false)
+                                setIsForgotPassword(false)
+                                setForgotPasswordMessage(null)
+                            }}>Login</a>
+                        </div>
                     </form>
                 )}
                 {loginError && <p className="error form-error">{loginError}</p>}
                 {signupError && <p className="error form-error">{signupError}</p>}
                 {forgotPasswordError && <p className="error form-error">{forgotPasswordError}</p>}
                 {forgotPasswordMessage && isForgotPassword && <p className="success form-error">{forgotPasswordMessage}</p>}
-
-                {!signingUp && !isForgotPassword && <div className="options"> <p>Don't have an account?</p><button onClick={() => setSigningUp(true)} className="btn">Signup</button></div>}
-                {signingUp && <div className="options"> <p>Already have an account?</p><button onClick={() => {
-                    setSigningUp(false)
-                    setIsForgotPassword(false)
-                    setForgotPasswordMessage(null)
-                }
-                } className="btn">Login</button></div>}
             </div>
-        </div>
+        </div >
     )
 }

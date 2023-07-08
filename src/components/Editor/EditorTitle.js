@@ -118,99 +118,79 @@ export default function EditorTitle(props) {
     }, [error])
 
     return (
-        <div className='editor-title'>
+        <div className='editor-title-container'>
             <ul>
-                <li className='logo icon'>
-                    <Link to="/">
-                        <img src={Logo} alt="Orbit Logo" title="Orbit" className='grow' />
-                    </Link>
+                <li className='logo'>
+                    <img src={Logo} alt="Orbit Logo" title="Orbit" className='logo-icon' />
+                </li>
+                <li className='tagline'><span>RISC-V Assembly Editor & Simulator</span></li>
+
+                {!saving && <li className='icon'><img src={Save} className='grow icon' alt="Save Icon" onClick={() => { handleSave(title, code) }} title="Save" /></li>}
+                {saving && <li className='icon'><img src={Load} className='grow spinning icon' alt="Loading Icon" onClick={() => { handleSave(title, code) }} title="Save" /></li>}
+
+                {!editing && <li className='icon code-icon'><img src={Code} className='grow icon' alt="Code Icon" title="Code" onClick={() => { setEditing(true) }} /></li>}
+                {editing && !errors.length > 0 && !warnings.length > 0 && <li className='icon'><img src={Simulate} alt="Simulate Icon" className='grow icon' title="Simulate" onClick={() => { setEditing(false) }} /></li>}
+                {editing && (errors.length > 0 || warnings.length > 0) && <li className='error-img'><img src={Simulate} alt="Simulate Icon" title="Resolve errors before simulating" /></li>}
+
+                <li>
+                    <Select placeholder="Editor Theme" options={themes} onChange={(option) => { setTheme(option.value) }} styles={colourStyles} className="theme-selector" />
                 </li>
 
-                <li className='title'>
+
+                {!isPending && !user && <li><button onClick={() => { setShowModal(true) }} className="btn">Login</button></li>}
+                {!isPending && user && <button className='btn' onClick={() => {
+                    handleSave(title, code)
+                    logout()
+                }}>Logout</button>}
+                {isPending && <button className='btn'>Logging Out...</button>}
+
+                {/* {!saving && <li className='icon'><img src={Save} className='grow' alt="Save Icon" onClick={() => { handleSave(title, code) }} title="Save" /></li>}
+                {saving && <li className='icon'><img src={Load} className='grow spinning' alt="Loading Icon" onClick={() => { handleSave(title, code) }} title="Save" /></li>}
+                {!editing && <li className='icon code-icon'><img src={Code} className='grow' alt="Code Icon" title="Code" onClick={() => { setEditing(true) }} /></li>}
+                {editing && !errors.length > 0 && !warnings.length > 0 && <li className='icon'><img src={Simulate} alt="Simulate Icon" className='grow' title="Simulate" onClick={() => { setEditing(false) }} /></li>}
+                {editing && (errors.length > 0 || warnings.length > 0) && <li className='error-img'><img src={Simulate} alt="Simulate Icon" title="Resolve errors before simulating" /></li>} */}
+
+                {/* <li className='title'>
                     <input spellCheck={false} className='title-changer' value={title} onChange={e => { setTitle(e.target.value) }} />
-                </li>
+                </li> */}
 
-                {editing && lastModified &&
+                {/* {editing && lastModified &&
                     <li className='title'>
                         <p ref={lastModifiedRef} className='last-modifed'>Saved: {lastModified.toDate().toDateString().slice(4)}, {lastModified.toDate("g").toLocaleTimeString('en-US')}</p>
                     </li>
-                }
+                } */}
 
-                {editing &&
-                    <li>
-                        <Select placeholder="Select Theme" options={themes} onChange={(option) => { setTheme(option.value) }} styles={colourStyles} className="theme-selector" />
-                    </li>
-                }
-                {editing && visible === true && user && createdBy === user.uid &&
+                {/* {editing && visible === true && user && createdBy === user.uid &&
                     <li className='icon'>
                         <img src={Public} className='grow' alt="Public Icon" onClick={() => {
                             setVisble(false)
                             changeVisibility(false)
                         }} title="Public" />
                     </li>
-                }
-                {editing && visible === false && user && createdBy === user.uid &&
+                } */}
+                {/* {editing && visible === false && user && createdBy === user.uid &&
                     <li className='icon'>
                         <img src={Private} className='grow' alt="Private Icon" onClick={() => {
                             setVisble(true)
                             changeVisibility(true)
                         }} title="Private" />
                     </li>
-                }
-                {editing && !saving &&
-                    <li className='icon'>
-                        <img src={Save} className='grow' alt="Save Icon" onClick={() => { handleSave(title, code) }} title="Save" />
-                    </li>
-                }
+                } */}
 
-                {editing && saving &&
-                    <li className='icon'>
-                        <img src={Load} className='grow spinning' alt="Loading Icon" onClick={() => { handleSave(title, code) }} title="Save" />
-                    </li>
-                }
-
-                {editing &&
+                {/* {editing &&
                     <li className='icon'>
                         <img className='grow' src={Download} alt="Download Icon" onClick={downloadFile} title="Download" />
                     </li>
-                }
+                } */}
 
-                {!editing &&
-                    <li className='icon code-icon'>
-                        <img src={Code} className='grow' alt="Code Icon" title="Code" onClick={() => { setEditing(true) }} />
-                    </li>
-                }
 
-                {editing && !errors.length > 0 && !warnings.length > 0 &&
-                    <li className='icon'>
-                        <img src={Simulate} alt="Simulate Icon" className='grow' title="Simulate" onClick={() => { setEditing(false) }} />
-                    </li>
-                }
 
-                {editing && (errors.length > 0 || warnings.length > 0) &&
-                    <li className='error-img'>
-                        <img src={Simulate} alt="Simulate Icon" title="Resolve errors before simulating" />
-                    </li>
-                }
 
-                {user &&
-                    <div className="dropdown">
-                        <p className="dropbtn">{user.displayName}</p>
-                        <div className="dropdown-content">
-                            <Link to={`/profile/${user.uid}`}>Projects</Link>
-                            {!isPending && <Link className='logout' to="#" onClick={() => {
-                                handleSave(title, code)
-                                logout()
-                                history.push("../")
-                            }}>Logout</Link>}
-                            {isPending && <Link className='logout' to="#">Logging Out...</Link>}
-                        </div>
-                    </div>
-                }
 
+                {/*
                 {!user &&
                     <li onClick={() => { setShowModal(true) }} className="login">Login</li>
-                }
+                } */}
             </ul>
         </div>
     )

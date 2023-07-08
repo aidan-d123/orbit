@@ -7,14 +7,14 @@ import { useAssembler } from "../../hooks/riscvHooks/assembler/useAssembler"
 import CodeMirror from "codemirror"
 
 // styles
-import "./Editor.css"
 import "codemirror/addon/lint/lint"
 import "codemirror/addon/lint/lint.css"
 import "codemirror/addon/edit/closebrackets"
 import "codemirror/addon/display/placeholder"
+import "./Editor.css"
 
 export default function Editor(props) {
-  const { code, setCode, editing, theme, integer, setInteger, setErrors, errors, setWarnings, warnings, setTalInstructions, setData, user, id } = props
+  const { code, setCode, editing, theme, integer, setInteger, setErrors, errors, setWarnings, warnings, setTalInstructions, setData, user, id, selectedProject } = props
   const { registers, instructions, keywords } = useRegex()
   const { assemble, } = useAssembler()
 
@@ -24,7 +24,7 @@ export default function Editor(props) {
     const { talInstructions, dataMemory } = assemble(code, setErrors, setWarnings)
     setTalInstructions([...talInstructions])
     setData([...dataMemory])
-  }, [code])
+  }, [code, selectedProject])
 
   // The "registerHelper" and "defineMode" code is modified from 
   // https://github.com/kvakil/venus/blob/master/src/main/frontend/js/risc-mode.js

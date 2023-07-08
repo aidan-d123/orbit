@@ -1,0 +1,67 @@
+.navbar-container {
+    grid-column-start: 2;
+    grid-row-start: 2;
+    background-color: var(--darkBgColor);
+}
+
+.selected-projects-list {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 100%;
+    color: var(--fontColor);
+    overflow-x: auto;
+}
+
+.selected-project {
+    height: 100%;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding: 0 10px 0 10px;
+    line-height: 42px;
+    display: grid;
+    grid-template-columns: 5% 80% 15%;
+    border-right: 1.5px solid var(--lightBgColor);
+    flex-shrink: 0;
+}
+
+#root>div>div.navbar-container>div>div:last-child {
+    border: none;
+}
+
+.nav-item-text {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-item-close {
+    color: var(--darkBgColor);
+    text-align: center;
+    border-radius: 30px;
+}
+
+.nav-item-close:hover {
+    color: var(--fontColor);
+}
+
+.selected-proj .nav-item-close {
+    color: var(--bgColor);
+}
+
+.selected-proj .nav-item-close:hover {
+    color: var(--fontColor);
+}
+
+.selected-project:hover {
+    cursor: pointer;
+}
+
+.selected-proj {
+    color: var(--yellow);
+    background-color: var(--bgColor);
+}

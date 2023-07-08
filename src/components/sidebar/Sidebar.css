@@ -1,0 +1,113 @@
+.sidebar-container {
+    grid-column-start: 1;
+    grid-row-start: 2;
+    grid-row-end: -1;
+    min-width: 100%;
+
+    display: grid;
+    grid-template-rows: 7% 93%;
+    grid-template-columns: 100%;
+    background-color: var(--darkBgColor);
+}
+
+.sidebar-title {
+    padding-top: 5px;
+    display: grid;
+    grid-template-columns: 70% 15% 15%;
+    color: var(--fontColor);
+    background-color: var(--lightBgColor);
+    font-size: 0.89em;
+}
+
+.sidebar-title-text {
+    padding-left: 5px;
+}
+
+.sidebar-title-images {
+    filter: invert(100%);
+    height: 19px;
+    transition: height 1s ease-out;
+}
+
+.sidebar-title-images:hover {
+    cursor: pointer;
+}
+
+.sidebar-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.no-projects {
+    color: var(--fontColor);
+    padding-left: 5px;
+    font-size: 0.89em;
+}
+
+.project-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8em;
+    display: inline-block;
+    width: 100%;
+    color: white;
+}
+
+.project-list-item {
+    color: var(--fontColor);
+    vertical-align: middle;
+    padding: 2px 0px;
+    display: grid;
+    grid-template-columns: 10% 60% 10% 10% 10%;
+}
+
+.project-list-item:hover {
+    background-color: var(--lightBgColor);
+    color: var(--yellow);
+    cursor: pointer;
+}
+
+.project-list-item img {
+    filter: invert(82%) sepia(26%) saturate(6041%) hue-rotate(211deg) brightness(96%) contrast(90%);
+    width: 3vh;
+    vertical-align: middle;
+    padding: 0 6px 0 0;
+}
+
+.project-list-item>.file-icon {
+    width: 2.3vh;
+}
+
+.project-list-item>span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.sidebar-selected-proj {
+    color: var(--yellow);
+}
+
+.project-list-item-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-list-item img.confirm {
+    filter: invert(93%) sepia(57%) saturate(448%) hue-rotate(24deg) brightness(95%) contrast(92%);
+}
+
+.project-list-item img.delete {
+    filter: invert(50%) sepia(43%) saturate(3224%) hue-rotate(318deg) brightness(98%) contrast(107%);
+    grid-column-start: 5;
+}
+
+.project-list-item img.save {
+    filter: invert(100%)
+}
+
+.folder-icon {
+    height: 19px;
+    filter: invert(84%) sepia(16%) saturate(1553%) hue-rotate(334deg) brightness(103%) contrast(103%);
+}

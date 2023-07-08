@@ -8,13 +8,18 @@ import { useEffect, useState } from "react";
 import { timestamp } from "../../firebase/config"
 import { useFirestore } from "../../hooks/firebase/useFirestore"
 import { useAuthContext } from "../../hooks/firebase/useAuthContext"
+import { useCollection } from "../../hooks/firebase/useCollection"
 
 // components
 import Editor from "../../components/editor/Editor"
 import Simulator from "../../components/simulator/simulator/Simulator";
 import LoginModal from "../../components/loginModal/LoginModal"
-import EditorTitle from "../../components/editor/EditorTitle";
 import Unauthorised from "../../components/unauthorised/Unauthorised";
+
+// components
+import EditorTitle from "../../components/editor/EditorTitle";
+import Sidebar from "../../components/sidebar/Sidebar";
+import Navbar from "../../components/navbar/Navbar";
 
 export default function Project() {
   const [showModal, setShowModal] = useState(false);
@@ -35,21 +40,31 @@ export default function Project() {
   const [updating, setUpdating] = useState(false)
   const { user } = useAuthContext();
   const { id } = useParams();
-  const { error, document } = useDocument("projects", id);
+  const { /*error,*/ document } = useDocument("projects", id);
   const { addDocument, updateDocument, response } = useFirestore("projects");
+  const { documents, error } = useCollection(
+    "projects",
+    ["lastModified", "desc"]);
+  const [projectList, setProjectList] = useState([])
+  const [selectedProjects, setSelectedProjects] = useState([])
+  const [selectedProject, setSelectedProject] = useState("")
+
+  // useEffect(() => {
+  //   if (document) {
+  //     setTitle(document.title)
+  //     setCode(document.code);
+  //     setLastModified(document.lastModified);
+  //     setCreatedBy(document.createdBy)
+  //     setVisble(document.visible)
+  //     setShow(true);
+  //     setIsNewProject(false)
+  //     setUpdating(false)
+  //   }
+  // }, [document]);
 
   useEffect(() => {
-    if (document) {
-      setTitle(document.title)
-      setCode(document.code);
-      setLastModified(document.lastModified);
-      setCreatedBy(document.createdBy)
-      setVisble(document.visible)
-      setShow(true);
-      setIsNewProject(false)
-      setUpdating(false)
-    }
-  }, [document]);
+    console.log(documents)
+  }, [documents])
 
   useEffect(() => {
     if (id !== "new") {
@@ -128,59 +143,190 @@ export default function Project() {
     })
   }
 
-  if (error && !isNewProject) {
-    return <div className="editor-container"><Unauthorised issue={error} /></div>
+  /********************************************************************************************** */
+
+  // get projects from firestore
+  // useEffect(() => {
+  //   if (documents) {
+  //     setProjectList(documents)
+  //   }
+  // }, [documents])
+
+  const createNewProject = () => {
+    const proj = {
+      folder: false,
+      title: "Hello, World!",
+      code: "",
+      id: uuid()
+    }
+
+    setProjectList(prevProjectList => {
+      return [...prevProjectList, proj]
+    })
+
+    selectProject(proj)
   }
 
+  const createNewFolder = () => {
+    const proj = {
+      folder: true,
+      title: "New Folder",
+      files: [{
+        folder: false,
+        title: "Hello, World!",
+        code: "",
+        id: uuid()
+      }],
+      id: uuid()
+    }
+
+    setProjectList(prevProjectList => {
+      return [...prevProjectList, proj]
+    })
+  }
+
+  const selectProject = proj => {
+    setSelectedProject(proj)
+    setTitle(proj.title)
+    setCode(proj.code)
+  }
+
+  const removeProject = id => {
+    console.log(id)
+    const filteredProj = projectList.filter(proj => {
+      return proj.id !== id
+    })
+
+    setProjectList(filteredProj)
+
+    if (filteredProj.length > 0) {
+      const newSelectedProj = filteredProj[0]
+      selectProject(newSelectedProj)
+    }
+  }
+
+  const uuid = () => {
+    const temp_url = URL.createObjectURL(new Blob());
+    const uuid = temp_url.toString();
+    URL.revokeObjectURL(temp_url);
+    return uuid.substr(uuid.lastIndexOf('/') + 1); // remove prefix (e.g. blob:null/, blob:www.test.com/, ...)
+  }
+
+  // re-render editor when new project is selected
+  useEffect(() => {
+    setInteger(integer === 1 ? 0 : 1)
+  }, [selectedProject])
+
+  // sort array alphabetically
+  useEffect(() => {
+    projectList.sort((a, b) => {
+      if (a.title < b.title) {
+        return -1
+      }
+      if (a.title > b.title) {
+        return 1
+      }
+      return 0
+    }
+    )
+
+    console.log(projectList)
+  }, [projectList])
+
   return (
-    <div className="editor-container" onKeyDown={e => { ctrlS(e) }} onBefore>
-      {(visible === true || (user && createdBy === user.uid)) && (show || id === "new") && (
-        <>
-          <EditorTitle
-            errors={errors}
-            warnings={warnings}
-            code={code}
-            title={title}
-            setTitle={setTitle}
-            lastModified={lastModified}
-            editing={editing}
-            setEditing={setEditing}
-            setShowModal={setShowModal}
-            setTheme={setTheme}
-            handleSave={handleSave}
-            visible={visible}
-            setVisble={setVisble}
-            createdBy={createdBy}
-            changeVisibility={changeVisibility}
-            saving={response.isPending}
-          />
-          <Editor
-            code={code}
-            setCode={setCode}
-            editing={editing}
-            theme={theme}
-            integer={integer}
-            setInteger={setInteger}
-            setErrors={setErrors}
-            errors={errors}
-            setWarnings={setWarnings}
-            warnings={warnings}
-            setTalInstructions={setTalInstructions}
-            setData={setData}
-            user={user}
-            id={id}
-          />
-        </>
-      )}
-      {!editing && (visible === true || (user && createdBy === user.uid)) && (show || id === "new") && <Simulator
+    <>
+      <EditorTitle
+        errors={errors}
+        warnings={warnings}
+        code={code}
+        title={title}
+        setTitle={setTitle}
+        lastModified={lastModified}
+        editing={editing}
+        setEditing={setEditing}
+        setShowModal={setShowModal}
+        setTheme={setTheme}
+        handleSave={handleSave}
+        visible={visible}
+        setVisble={setVisble}
+        createdBy={createdBy}
+        changeVisibility={changeVisibility}
+        saving={response.isPending}
+        selectedProject={selectedProject}
+      />
+      <Sidebar projectList={projectList} createNewProject={createNewProject} createNewFolder={createNewFolder} removeProject={removeProject} selectedProjects={selectedProjects} setSelectedProjects={setSelectedProjects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
+      {editing && selectedProjects.length > 0 && <Navbar selectedProjects={selectedProjects} setSelectedProjects={setSelectedProjects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} removeProject={removeProject} />}
+      {editing && selectedProject &&
+        <Editor
+          code={code}
+          setCode={setCode}
+          editing={editing}
+          theme={theme}
+          integer={integer}
+          setInteger={setInteger}
+          setErrors={setErrors}
+          errors={errors}
+          setWarnings={setWarnings}
+          warnings={warnings}
+          setTalInstructions={setTalInstructions}
+          setData={setData}
+          user={user}
+          id={id}
+        />}
+      {!editing && <Simulator
         talInstructions={talInstructions}
         data={data}
       />}
       {showModal && <LoginModal setShowModal={setShowModal} />}
 
-      {(!updating && (!(visible === true || (user && createdBy === user.uid)) && (show === false || id === "new"))) &&
-        (< Unauthorised issue="The author has made this file private" />)
-      }
-    </div>
+    </>
+    // <>
+    //   {(visible === true || (user && createdBy === user.uid)) && (show || id === "new") && (
+    //     <>
+    //       <EditorTitle
+    //         errors={errors}
+    //         warnings={warnings}
+    //         code={code}
+    //         title={title}
+    //         setTitle={setTitle}
+    //         lastModified={lastModified}
+    //         editing={editing}
+    //         setEditing={setEditing}
+    //         setShowModal={setShowModal}
+    //         setTheme={setTheme}
+    //         handleSave={handleSave}
+    //         visible={visible}
+    //         setVisble={setVisble}
+    //         createdBy={createdBy}
+    //         changeVisibility={changeVisibility}
+    //         saving={response.isPending}
+    //       />
+    //       <Editor
+    //         code={code}
+    //         setCode={setCode}
+    //         editing={editing}
+    //         theme={theme}
+    //         integer={integer}
+    //         setInteger={setInteger}
+    //         setErrors={setErrors}
+    //         errors={errors}
+    //         setWarnings={setWarnings}
+    //         warnings={warnings}
+    //         setTalInstructions={setTalInstructions}
+    //         setData={setData}
+    //         user={user}
+    //         id={id}
+    //       />
+    //     </>
+    //   )}
+    //   {!editing && (visible === true || (user && createdBy === user.uid)) && (show || id === "new") && <Simulator
+    //     talInstructions={talInstructions}
+    //     data={data}
+    //   />}
+
+    //   {(!updating && (!(visible === true || (user && createdBy === user.uid)) && (show === false || id === "new"))) &&
+    //     (< Unauthorised issue="The author has made this file private" />)
+    //   }
+    // </>
   )
 }

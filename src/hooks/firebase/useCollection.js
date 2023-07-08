@@ -1,17 +1,19 @@
 import { useEffect, useState, useRef } from "react"
 import { projectFirestore } from "../../firebase/config"
+import { useAuthContext } from "../../hooks/firebase/useAuthContext"
 
-export const useCollection = (collection, _query, _orderBy) => {
+export const useCollection = (collection, _orderBy) => {
   const [documents, setDocuments] = useState(null)
   const [error, setError] = useState(null)
+  const { user } = useAuthContext();
 
   // if we don't use a ref --> infinite loop in useEffect
   // _query is an array and is "different" on every function call
-  const query = useRef(_query).current
   const orderBy = useRef(_orderBy).current
 
   useEffect(() => {
     let ref = projectFirestore.collection(collection)
+    const query = ["createdBy", "==", user ? user.uid : ""]
 
     if (query) {
       ref = ref.where(...query)
@@ -30,14 +32,13 @@ export const useCollection = (collection, _query, _orderBy) => {
       setDocuments(results)
       setError(null)
     }, error => {
-      console.log(error)
       setError('could not fetch the data')
     })
 
     // unsubscribe on unmount
     return () => unsubscribe()
 
-  }, [collection, query, orderBy])
+  }, [collection, orderBy, user])
 
   return { documents, error }
 }
