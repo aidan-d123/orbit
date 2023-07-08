@@ -1,6 +1,3 @@
-//styles
-import './App.css';
-
 // components
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
